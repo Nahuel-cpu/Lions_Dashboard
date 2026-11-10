@@ -11,7 +11,7 @@ beforeEach(function () {
 });
 
 it('vaciar demo borra solo lo sin shopify_id y deja lo real', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->admin()->create();
     $this->actingAs($user);
 
     // demo: pedido sin shopify_id
@@ -33,7 +33,7 @@ it('vaciar demo borra solo lo sin shopify_id y deja lo real', function () {
 });
 
 it('sincronizar sin credenciales da error amigable', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->admin()->create();
     $this->actingAs($user);
 
     $response = $this->post('/settings/shopify/sincronizar')->assertRedirect();
@@ -53,7 +53,7 @@ it('sincronizar corre wipe + import completo contra shopify fake', function () {
             ->push(['data' => ['orders' => ['edges' => [], 'pageInfo' => ['hasNextPage' => false]]]]),
     ]);
 
-    $user = User::factory()->create();
+    $user = User::factory()->admin()->create();
     $this->actingAs($user)
         ->post('/settings/shopify', ['store_domain' => 't.myshopify.com', 'client_id' => 'cli', 'client_secret' => 'sec']);
 

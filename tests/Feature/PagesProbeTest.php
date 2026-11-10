@@ -18,6 +18,7 @@ class PagesProbeTest extends TestCase
             'name' => 'Admin Probe',
             'email' => 'probe@lions.com',
             'password' => bcrypt('lions1234'),
+            'is_admin' => true,
         ]);
 
         $user->forceFill(['email_verified_at' => now()])->save();

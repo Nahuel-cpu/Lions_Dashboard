@@ -161,7 +161,9 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        // Registro público cerrado: las cuentas las crea el dueño de la
+        // tienda (seeder). El panel exige Gate 'admin' (is_admin).
+        // Features::registration(),
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([

@@ -16,7 +16,9 @@ Route::inertia('/', 'welcome')->name('home');
 Route::post('webhooks/shopify', [ShopifyWebhookController::class, 'store'])
     ->name('webhooks.shopify');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+// Panel completo: sólo administradores (Gate 'admin' en AppServiceProvider).
+// Registro público deshabilitado: las cuentas las crea el dueño (seeder/DB).
+Route::middleware(['auth', 'verified', 'can:admin'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('pedidos', [OrdersController::class, 'index'])->name('pedidos');

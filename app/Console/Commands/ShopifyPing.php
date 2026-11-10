@@ -19,7 +19,7 @@ class ShopifyPing extends Command
             $data = (new ShopifyConnector)->shopInfo();
         } catch (RuntimeException $e) {
             $this->error($e->getMessage());
-            $this->line('Cómo completarlo: en el admin de la tienda → Configuración → Apps → Develop apps → Create app (scopes read_orders, read_customers, read_products, read_inventory). El token shpat_ se ve una sola vez al instalar.');
+            $this->line('Cómo completarlo: en dev.shopify.com abrí tu app → Versiones (publicá una versión con scopes read_products, read_customers, read_orders) → Configuración → copiá el Client ID y el Secreto del cliente → cargalos en Settings → Shopify del panel.');
 
             return self::FAILURE;
         }

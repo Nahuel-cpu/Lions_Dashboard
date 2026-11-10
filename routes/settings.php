@@ -12,12 +12,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    Route::get('settings/shopify', [ShopifySettingsController::class, 'edit'])->name('settings.shopify');
-    Route::post('settings/shopify', [ShopifySettingsController::class, 'update'])->name('settings.shopify.update');
-    Route::post('settings/shopify/probar', [ShopifySettingsController::class, 'test'])->name('settings.shopify.test');
-    Route::post('settings/shopify/sincronizar', [ShopifySettingsController::class, 'sync'])->name('settings.shopify.sync');
-    Route::post('settings/shopify/vaciar-demo', [ShopifySettingsController::class, 'wipeDemo'])->name('settings.shopify.vaciar');
-    Route::delete('settings/shopify', [ShopifySettingsController::class, 'destroy'])->name('settings.shopify.destroy');
+    // Settings → Shopify maneja credenciales y borrado masivo: sólo admin.
+    Route::middleware('can:admin')->group(function (): void {
+        Route::get('settings/shopify', [ShopifySettingsController::class, 'edit'])->name('settings.shopify');
+        Route::post('settings/shopify', [ShopifySettingsController::class, 'update'])->name('settings.shopify.update');
+        Route::post('settings/shopify/probar', [ShopifySettingsController::class, 'test'])->name('settings.shopify.test');
+        Route::post('settings/shopify/sincronizar', [ShopifySettingsController::class, 'sync'])->name('settings.shopify.sync');
+        Route::post('settings/shopify/vaciar-demo', [ShopifySettingsController::class, 'wipeDemo'])->name('settings.shopify.vaciar');
+        Route::delete('settings/shopify', [ShopifySettingsController::class, 'destroy'])->name('settings.shopify.destroy');
+    });
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

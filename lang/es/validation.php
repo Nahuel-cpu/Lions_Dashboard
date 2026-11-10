@@ -156,7 +156,6 @@ return [
         ],
         'access_token' => [
             'required' => 'Escribí el token de Admin API.',
-            'starts_with' => 'El token no es de Admin API: debe empezar con shpat_, shpca_ o shppa_. Verificá que lo copiaste de la app custom (sección Admin API access token), no de la Storefront API.',
         ],
         'current_password' => [
             'current_password' => 'La contraseña actual que escribiste no es correcta.',

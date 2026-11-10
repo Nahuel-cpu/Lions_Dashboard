@@ -15,7 +15,7 @@ afterEach(function () {
 });
 
 it('muestra la página sin tienda conectada', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->admin()->create();
 
     $this->actingAs($user)
         ->get('/settings/shopify')
@@ -27,7 +27,7 @@ it('muestra la página sin tienda conectada', function () {
 });
 
 it('guarda credenciales del dev dashboard y no devuelve secretos al frontend', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->admin()->create();
 
     $this->actingAs($user)
         ->post('/settings/shopify', [
@@ -55,7 +55,7 @@ it('guarda credenciales del dev dashboard y no devuelve secretos al frontend', f
 });
 
 it('valida campos faltantes sin guardar nada', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->admin()->create();
 
     $this->actingAs($user)
         ->post('/settings/shopify', [
@@ -79,7 +79,7 @@ it('prueba la conexión con client credentials y cachea el token', function () {
         ]),
     ]);
 
-    $user = User::factory()->create();
+    $user = User::factory()->admin()->create();
     $this->actingAs($user)
         ->post('/settings/shopify', [
             'store_domain' => 'tienda.myshopify.com',
@@ -121,7 +121,7 @@ it('renueva el token cuando el cacheado está vencido', function () {
     ]);
     Credentials::forget();
 
-    $user = User::factory()->create();
+    $user = User::factory()->admin()->create();
     $this->actingAs($user)->post('/settings/shopify/probar')->assertRedirect();
 
     expect(ShopifySetting::query()->firstOrFail()->access_token)->toBe('tok_nuevo');
@@ -146,7 +146,7 @@ it('reutiliza el token vigente sin pedir otro', function () {
     $row->save();
     Credentials::forget();
 
-    $user = User::factory()->create();
+    $user = User::factory()->admin()->create();
     $this->actingAs($user)->post('/settings/shopify/probar')->assertRedirect();
 
     $row->refresh();
@@ -162,7 +162,7 @@ it('propaga el error cuando reparten credenciales que no corresponden', function
         ], 400),
     ]);
 
-    $user = User::factory()->create();
+    $user = User::factory()->admin()->create();
     $this->actingAs($user)
         ->post('/settings/shopify', [
             'store_domain' => 'tienda-ajena.myshopify.com',
@@ -186,7 +186,7 @@ it('registra el fallo de conexión de la API sin tirar error 500', function () {
         ]),
     ]);
 
-    $user = User::factory()->create();
+    $user = User::factory()->admin()->create();
     $this->actingAs($user)
         ->post('/settings/shopify', [
             'store_domain' => 'tienda.myshopify.com',
@@ -202,7 +202,7 @@ it('registra el fallo de conexión de la API sin tirar error 500', function () {
 });
 
 it('desconecta y borra la credencial', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->admin()->create();
     $this->actingAs($user)->post('/settings/shopify', [
         'store_domain' => 'tienda.myshopify.com',
         'client_id' => 'cli123',
