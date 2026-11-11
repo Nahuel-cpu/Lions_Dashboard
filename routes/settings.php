@@ -12,7 +12,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    // Settings → Shopify maneja credenciales y borrado masivo: sólo admin.
     Route::middleware('can:admin')->group(function (): void {
         Route::get('settings/shopify', [ShopifySettingsController::class, 'edit'])->name('settings.shopify');
         Route::post('settings/shopify', [ShopifySettingsController::class, 'update'])->name('settings.shopify.update');

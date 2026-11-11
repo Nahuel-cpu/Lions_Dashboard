@@ -35,7 +35,6 @@ class DatabaseSeeder extends Seeder
             return;
         }
 
-        // Limpieza de demo previo (orden de FKs respetado).
         Activity::query()->delete();
         OrderItem::query()->delete();
         Order::query()->delete();
@@ -44,7 +43,6 @@ class DatabaseSeeder extends Seeder
         Customer::query()->delete();
         Category::query()->delete();
 
-        // Usuario admin idempotente.
         User::updateOrCreate(
             ['email' => 'admin@lions.com'],
             [

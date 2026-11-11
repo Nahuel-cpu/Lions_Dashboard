@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-/** Devuelve el valor con retardo: evita recargar la página en cada tecla. */
 export function useDebouncedValue<T>(value: T, delay = 300): T {
     const [debounced, setDebounced] = useState(value);
 

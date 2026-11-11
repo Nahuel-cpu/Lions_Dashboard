@@ -1,7 +1,14 @@
 import { Head, router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { BadgeCheck, CheckCircle2, Clock, Printer, Search, XCircle } from 'lucide-react';
+import {
+    BadgeCheck,
+    CheckCircle2,
+    Clock,
+    Printer,
+    Search,
+    XCircle,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -40,7 +47,9 @@ export default function Orders(props: OrdersProps) {
 
     const navigateFilter = (q: string | undefined) => {
         router.get(
-            ordersRoute({ query: { estado: filters.estado, q: q ? q : undefined } }).url,
+            ordersRoute({
+                query: { estado: filters.estado, q: q ? q : undefined },
+            }).url,
             {},
             {
                 only: ['orders', 'counts', 'todayRevenue', 'filters'],
@@ -55,7 +64,11 @@ export default function Orders(props: OrdersProps) {
         router.post(
             target.url,
             {},
-            { only: ['orders', 'counts', 'todayRevenue', 'filters'], preserveState: true, preserveScroll: true },
+            {
+                only: ['orders', 'counts', 'todayRevenue', 'filters'],
+                preserveState: true,
+                preserveScroll: true,
+            },
         );
     };
 
@@ -70,13 +83,18 @@ export default function Orders(props: OrdersProps) {
                     className="flex flex-wrap items-center justify-between gap-4"
                 >
                     <div>
-                        <h1 className="text-xl font-bold tracking-tight">Pedidos</h1>
+                        <h1 className="text-xl font-bold tracking-tight">
+                            Pedidos
+                        </h1>
                         <p className="text-sm text-muted-foreground">
-                            Cobranza del día: <span className="font-semibold text-foreground">{formatCurrency(todayRevenue)}</span>
+                            Cobranza del día:{' '}
+                            <span className="font-semibold text-foreground">
+                                {formatCurrency(todayRevenue)}
+                            </span>
                         </p>
                     </div>
                     <div className="relative w-full max-w-xs">
-                        <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
@@ -92,10 +110,20 @@ export default function Orders(props: OrdersProps) {
                             key={tab.value}
                             onClick={() =>
                                 router.get(
-                                    ordersRoute({ query: { estado: tab.value, q: search || undefined } }).url,
+                                    ordersRoute({
+                                        query: {
+                                            estado: tab.value,
+                                            q: search || undefined,
+                                        },
+                                    }).url,
                                     {},
                                     {
-                                        only: ['orders', 'counts', 'todayRevenue', 'filters'],
+                                        only: [
+                                            'orders',
+                                            'counts',
+                                            'todayRevenue',
+                                            'filters',
+                                        ],
                                         preserveState: true,
                                         preserveScroll: true,
                                     },
@@ -110,7 +138,13 @@ export default function Orders(props: OrdersProps) {
                         >
                             <tab.icon className="size-3.5" />
                             {tab.label}
-                            <span className={cn('rounded-full px-1.5 tabular-nums', filters.estado === tab.value && 'bg-background/20')}>
+                            <span
+                                className={cn(
+                                    'rounded-full px-1.5 tabular-nums',
+                                    filters.estado === tab.value &&
+                                        'bg-background/20',
+                                )}
+                            >
                                 {counts[tab.value as keyof typeof counts] ?? 0}
                             </span>
                         </button>
@@ -124,45 +158,91 @@ export default function Orders(props: OrdersProps) {
                 >
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[720px] text-sm">
-                            <thead className="border-b bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
+                            <thead className="border-b bg-muted/40 text-left text-xs tracking-wide text-muted-foreground uppercase">
                                 <tr>
                                     <th className="px-4 py-3 font-medium">#</th>
-                                    <th className="px-4 py-3 font-medium">Cliente</th>
-                                    <th className="px-4 py-3 font-medium">Ciudad</th>
-                                    <th className="px-4 py-3 font-medium">Fecha</th>
-                                    <th className="px-4 py-3 text-right font-medium">Total</th>
-                                    <th className="px-4 py-3 font-medium">Estado</th>
+                                    <th className="px-4 py-3 font-medium">
+                                        Cliente
+                                    </th>
+                                    <th className="px-4 py-3 font-medium">
+                                        Ciudad
+                                    </th>
+                                    <th className="px-4 py-3 font-medium">
+                                        Fecha
+                                    </th>
+                                    <th className="px-4 py-3 text-right font-medium">
+                                        Total
+                                    </th>
+                                    <th className="px-4 py-3 font-medium">
+                                        Estado
+                                    </th>
                                     <th className="px-4 py-3" />
                                 </tr>
                             </thead>
                             <tbody>
                                 {orders.data.map((order) => (
-                                    <tr key={order.id} className="border-b border-border/50 transition-colors hover:bg-muted/30">
-                                        <td className="px-4 py-2.5 font-mono text-xs text-muted-foreground">#{order.id}</td>
-                                        <td className="px-4 py-2.5">
-                                            <p className="font-medium">{order.customer.name}</p>
-                                            <p className="text-xs text-muted-foreground">{order.customer.email}</p>
+                                    <tr
+                                        key={order.id}
+                                        className="border-b border-border/50 transition-colors hover:bg-muted/30"
+                                    >
+                                        <td className="px-4 py-2.5 font-mono text-xs text-muted-foreground">
+                                            #{order.id}
                                         </td>
-                                        <td className="px-4 py-2.5 text-muted-foreground">{order.customer.city}</td>
-                                        <td className="px-4 py-2.5 text-muted-foreground">{formatDateTime(order.ordered_at)}</td>
-                                        <td className="px-4 py-2.5 text-right font-semibold tabular-nums">{formatCurrency(order.total)}</td>
                                         <td className="px-4 py-2.5">
-                                            <Badge variant="outline" className={cn('font-medium capitalize', STATUS_STYLES[order.status])}>
+                                            <p className="font-medium">
+                                                {order.customer.name}
+                                            </p>
+                                            <p className="text-xs text-muted-foreground">
+                                                {order.customer.email}
+                                            </p>
+                                        </td>
+                                        <td className="px-4 py-2.5 text-muted-foreground">
+                                            {order.customer.city}
+                                        </td>
+                                        <td className="px-4 py-2.5 text-muted-foreground">
+                                            {formatDateTime(order.ordered_at)}
+                                        </td>
+                                        <td className="px-4 py-2.5 text-right font-semibold tabular-nums">
+                                            {formatCurrency(order.total)}
+                                        </td>
+                                        <td className="px-4 py-2.5">
+                                            <Badge
+                                                variant="outline"
+                                                className={cn(
+                                                    'font-medium capitalize',
+                                                    STATUS_STYLES[order.status],
+                                                )}
+                                            >
                                                 {order.status}
                                             </Badge>
                                         </td>
                                         <td className="px-4 py-2.5 text-right">
-                                            {order.status === 'pendiente' && !order.shopify_id && (
-                                                <Button size="sm" variant="outline" className="h-7 gap-1.5 text-xs" onClick={() => confirm(order.id)}>
-                                                    <BadgeCheck className="size-3.5" /> Confirmar
-                                                </Button>
-                                            )}
+                                            {order.status === 'pendiente' &&
+                                                !order.shopify_id && (
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="h-7 gap-1.5 text-xs"
+                                                        onClick={() =>
+                                                            confirm(order.id)
+                                                        }
+                                                    >
+                                                        <BadgeCheck className="size-3.5" />{' '}
+                                                        Confirmar
+                                                    </Button>
+                                                )}
                                             {order.status === 'completado' && (
-                                                <span className="text-xs text-emerald-500">✓ cobrado</span>
+                                                <span className="text-xs text-emerald-500">
+                                                    ✓ cobrado
+                                                </span>
                                             )}
-                                            {order.status === 'pendiente' && order.shopify_id !== null && order.shopify_id !== '' && (
-                                                <span className="text-xs text-muted-foreground">gestión en Shopify</span>
-                                            )}
+                                            {order.status === 'pendiente' &&
+                                                order.shopify_id !== null &&
+                                                order.shopify_id !== '' && (
+                                                    <span className="text-xs text-muted-foreground">
+                                                        gestión en Shopify
+                                                    </span>
+                                                )}
                                         </td>
                                     </tr>
                                 ))}
@@ -175,7 +255,13 @@ export default function Orders(props: OrdersProps) {
                     meta={orders}
                     funcNavigate={(page) =>
                         router.get(
-                            ordersRoute({ query: { estado: filters.estado, q: search || undefined, page } }).url,
+                            ordersRoute({
+                                query: {
+                                    estado: filters.estado,
+                                    q: search || undefined,
+                                    page,
+                                },
+                            }).url,
                             {},
                             { only: ['orders', 'counts'], preserveState: true },
                         )
@@ -186,23 +272,42 @@ export default function Orders(props: OrdersProps) {
     );
 }
 
-function Pagination({ meta, funcNavigate }: { meta: { current_page: number; last_page: number; total: number }; funcNavigate: (page: number) => void }) {
+function Pagination({
+    meta,
+    funcNavigate,
+}: {
+    meta: { current_page: number; last_page: number; total: number };
+    funcNavigate: (page: number) => void;
+}) {
     if (meta.last_page <= 1) {
-        return <p className="text-center text-xs text-muted-foreground">{meta.total} pedidos</p>;
+        return (
+            <p className="text-center text-xs text-muted-foreground">
+                {meta.total} pedidos
+            </p>
+        );
     }
 
     return (
         <div className="flex items-center justify-center gap-2">
             {meta.current_page > 1 && (
-                <Button variant="outline" size="sm" onClick={() => funcNavigate(meta.current_page - 1)}>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => funcNavigate(meta.current_page - 1)}
+                >
                     ← Anterior
                 </Button>
             )}
             <span className="text-xs text-muted-foreground">
-                Página {meta.current_page} de {meta.last_page} · {meta.total} pedidos
+                Página {meta.current_page} de {meta.last_page} · {meta.total}{' '}
+                pedidos
             </span>
             {meta.current_page < meta.last_page && (
-                <Button variant="outline" size="sm" onClick={() => funcNavigate(meta.current_page + 1)}>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => funcNavigate(meta.current_page + 1)}
+                >
                     Siguiente →
                 </Button>
             )}
@@ -211,5 +316,8 @@ function Pagination({ meta, funcNavigate }: { meta: { current_page: number; last
 }
 
 Orders.layout = {
-    breadcrumbs: [{ title: 'Panel Lions', href: '' }, { title: 'Pedidos', href: '' }],
+    breadcrumbs: [
+        { title: 'Panel Lions', href: '' },
+        { title: 'Pedidos', href: '' },
+    ],
 };

@@ -40,8 +40,7 @@ class SimulateStore extends Command
 
     public function handle(): int
     {
-        // Con la tienda Shopify real conectada, simular operaciones generaría
-        // datos falsos mezclados con los reales (y fraudaría métricas).
+
         if (Credentials::configured()) {
             $this->error('Shopify está conectado: el simulador está deshabilitado para no mezclar datos demo con los reales.');
 
@@ -183,8 +182,6 @@ class SimulateStore extends Command
             'performed_at' => now(),
         ]);
 
-        // La alerta de stock bajo sólo tiene sentido si AÚN sigue por debajo
-        // del umbral después de la reposición (antes se difundía siempre).
         if ($variant->stock <= $product->low_stock_threshold) {
             broadcast(new StockLow($product->name, $variant->size, $variant->stock, now()->toIso8601String()))->toOthers();
         }

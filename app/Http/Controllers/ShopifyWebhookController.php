@@ -37,9 +37,6 @@ class ShopifyWebhookController extends Controller
         $topic = (string) $request->header('X-Shopify-Topic', '');
         $payload = json_decode($raw, true);
 
-        // Topics soportados: orders/create, orders/update, orders/cancelled...
-        // El payload REST trae admin_graphql_api_id: el job resuelve el estado
-        // completo del pedido vía GraphQL usando ese GID.
         if (str_starts_with($topic, 'orders/') && is_array($payload)) {
             $gid = $payload['admin_graphql_api_id'] ?? null;
             if (is_string($gid) && $gid !== '') {

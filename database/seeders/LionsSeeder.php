@@ -79,7 +79,6 @@ class LionsSeeder extends Seeder
             $categoryIds[$name] = Category::create(['name' => $name, 'slug' => $slug])->id;
         }
 
-        // ---- Productos + variantes ----
         $variantData = [];
         $productWeights = [];
         foreach (self::CATALOG as $categoryName => $models) {
@@ -100,7 +99,7 @@ class LionsSeeder extends Seeder
 
                 foreach (self::SIZES as $size) {
                     $stock = mt_rand(0, 55);
-                    // El ~9% de las variantes quedan con poco stock
+
                     if (mt_rand(1, 100) <= 9) {
                         $stock = mt_rand(0, 9);
                     }
@@ -115,7 +114,6 @@ class LionsSeeder extends Seeder
         $productIds = Product::query()->pluck('id')->all();
         $products = Product::query()->with('variants')->get()->keyBy('id');
 
-        // ---- Clientes ----
         $customerRows = [];
         $emails = [];
         $cityPool = [];
@@ -124,7 +122,7 @@ class LionsSeeder extends Seeder
                 $cityPool[] = [$city, $lat, $lng];
             }
         }
-        // self::CITIES es un array literal no vacío: cityPool nunca queda vacío.
+
         $count = 640;
         for ($i = 0; $i < $count; $i++) {
             [$city, $lat, $lng] = $this->pick($cityPool);
@@ -150,7 +148,7 @@ class LionsSeeder extends Seeder
         }
 
         $customerIds = Customer::query()->pluck('id')->all();
-        // Buenos Aires debe concentrar más pedidos: peso
+
         $weightedCustomerIds = [];
         $customers = Customer::query()->get(['id', 'city']);
         foreach ($customers as $customer) {
@@ -160,7 +158,6 @@ class LionsSeeder extends Seeder
             }
         }
 
-        // ---- Pedidos (últimos 150 días) ----
         $orderRows = [];
         $itemRows = [];
         $now = now();
@@ -169,7 +166,7 @@ class LionsSeeder extends Seeder
             $orderCount = mt_rand(6, 24);
             for ($i = 0; $i < $orderCount; $i++) {
                 $orderedAt = $day->copy()->startOfDay()->addMinutes(mt_rand(0, 1439));
-                // Los pedidos recientes tienen más chance de estar pendientes
+
                 $statusMatch = $daysAgo < 4 ? mt_rand(1, 100) : mt_rand(1, 100) + 25;
                 $status = $statusMatch <= 12 ? 'pendiente' : ($statusMatch <= 19 ? 'cancelado' : 'completado');
                 if ($daysAgo < 3 && mt_rand(1, 100) <= 45) {
@@ -216,7 +213,6 @@ class LionsSeeder extends Seeder
             DB::table('order_items')->insert($chunk);
         }
 
-        // ---- Actividad reciente ----
         $cityNames = array_keys(self::CITIES);
         $activityRows = [];
         $skuPlaceholder = 'RNR-401';

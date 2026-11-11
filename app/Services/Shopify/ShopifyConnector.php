@@ -138,8 +138,6 @@ class ShopifyConnector
             usleep(500_000);
         }
 
-        // La Admin API no acepta "Authorization: Bearer": exige la cabecera
-        // propia X-Shopify-Access-Token.
         $response = Http::withHeaders(['X-Shopify-Access-Token' => $this->resolveToken()])
             ->asJson()
             ->timeout(60)

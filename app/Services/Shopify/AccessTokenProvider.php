@@ -85,7 +85,6 @@ final class AccessTokenProvider
     {
         $row = ShopifySetting::query()->firstOrNew();
 
-        // Si cambió de tienda, la caché vieja no sirve más.
         if ($row->store_domain !== $store) {
             $row->access_token = null;
             $row->token_expires_at = null;

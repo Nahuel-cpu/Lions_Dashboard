@@ -41,11 +41,10 @@ it('guarda credenciales del dev dashboard y no devuelve secretos al frontend', f
     $row = ShopifySetting::query()->firstOrFail();
     expect($row->store_domain)->toBe('mi-tienda.myshopify.com')
         ->and($row->client_id)->toBe('1a853ca58ea9fecb5f72f0fe777cad2e')
-        // el raw en base es ciphertext; el modelo devuelve el descifrado
+
         ->and($row->getRawOriginal('client_secret'))->not->toBe('secretito123')
         ->and($row->webhook_secret)->toBe('shpss_xyz');
 
-    // el secreto y el token cacheado nunca viajan al cliente
     $this->actingAs($user)
         ->get('/settings/shopify')
         ->assertInertia(fn ($page) => $page
@@ -92,7 +91,7 @@ it('prueba la conexión con client credentials y cachea el token', function () {
     $row = ShopifySetting::query()->firstOrFail();
     expect($row->last_check_ok)->toBeTrue()
         ->and($row->last_check_message)->toContain('Mi Tienda Real')
-        // el token obtenido quedó cacheado y cifrado
+
         ->and($row->access_token)->toBe('tok_de_acceso_123')
         ->and($row->getRawOriginal('access_token'))->not->toBe('tok_de_acceso_123')
         ->and($row->token_expires_at)->not->toBeNull();
@@ -212,5 +211,5 @@ it('desconecta y borra la credencial', function () {
     $this->actingAs($user)->delete('/settings/shopify')->assertRedirect();
 
     expect(ShopifySetting::query()->count())->toBe(0);
-    expect(Credentials::configured())->toBeFalse(); // .env vacío en tests
+    expect(Credentials::configured())->toBeFalse();
 });

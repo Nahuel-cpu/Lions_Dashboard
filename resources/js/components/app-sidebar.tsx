@@ -18,13 +18,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import {
-    clientes,
-    dashboard,
-    inventario,
-    pedidos,
-    productos,
-} from '@/routes';
+import { clientes, dashboard, inventario, pedidos, productos } from '@/routes';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -65,8 +59,12 @@ export function AppSidebar() {
                             <Link href={dashboard()} prefetch>
                                 <AppLogoIcon className="size-8 rounded-lg bg-amber-950 object-contain p-1 text-amber-400" />
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-bold text-amber-500">LIONS</span>
-                                    <span className="truncate text-xs text-muted-foreground">Panel de comercio</span>
+                                    <span className="truncate font-bold text-amber-500">
+                                        LIONS
+                                    </span>
+                                    <span className="truncate text-xs text-muted-foreground">
+                                        Panel de comercio
+                                    </span>
                                 </div>
                             </Link>
                         </SidebarMenuButton>

@@ -36,7 +36,7 @@ class ShopifySettingsController extends Controller
                 'hasSecret' => $row !== null && $row->client_secret !== null && $row->client_secret !== '',
                 'hasTokenCache' => $row !== null && $row->access_token !== null && $row->access_token !== '',
                 'tokenExpiresAt' => $row?->token_expires_at?->toIso8601String(),
-                'webhookSecret' => $row?->webhook_secret, // el secreto de HMAC es compartible acá
+                'webhookSecret' => $row?->webhook_secret,
                 'lastCheckAt' => $row?->last_check_at?->toIso8601String(),
                 'lastCheckOk' => $row?->last_check_ok,
                 'lastCheckMessage' => $row?->last_check_message,

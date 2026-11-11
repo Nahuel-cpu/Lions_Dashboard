@@ -26,8 +26,7 @@ class OrdersController extends Controller
             ->with('customer:id,name,email,city')
             ->when($status !== 'todos', fn ($q) => $q->where('status', $status))
             ->when($validated['q'] ?? null, function ($query, $search) {
-                // Agrupado para que (cliente coincide OR #id) se combine con el
-                // filtro de estado con AND y no eluda la pestaña activa.
+
                 $query->where(function ($w) use ($search) {
                     $w->whereHas('customer', fn ($c) => $c->where('name', 'like', "%$search%")
                         ->orWhere('email', 'like', "%$search%"))
@@ -60,8 +59,6 @@ class OrdersController extends Controller
     {
         $from = $order->status;
 
-        // Los pedidos sincronizados de Shopify son de solo lectura: el
-        // cobrado/fulfillment se maneja en la tienda, no aquí.
         if ($order->shopify_id !== null) {
             return back()->with('error', 'El pedido '.$order->id.' viene de Shopify: gestioná su estado en la tienda.');
         }

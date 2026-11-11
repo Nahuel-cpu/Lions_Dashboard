@@ -27,8 +27,8 @@ export default function KpiCard({
         trend === 'up'
             ? 'text-emerald-500'
             : trend === 'down'
-                ? 'text-rose-500'
-                : 'text-muted-foreground';
+              ? 'text-rose-500'
+              : 'text-muted-foreground';
 
     return (
         <motion.div
@@ -48,14 +48,14 @@ export default function KpiCard({
                 className={`pointer-events-none absolute -top-10 -right-8 size-28 rounded-full bg-gradient-to-br from-chart-1/10 to-transparent blur-2xl`}
             />
             <div className="flex items-start justify-between">
-                <p className="text-sm font-medium text-muted-foreground">{label}</p>
-                <span
-                    className={`rounded-lg bg-muted p-2 ${accent}`}
-                >
+                <p className="text-sm font-medium text-muted-foreground">
+                    {label}
+                </p>
+                <span className={`rounded-lg bg-muted p-2 ${accent}`}>
                     <Icon className="size-4" />
                 </span>
             </div>
-            <p className="mt-2 text-2xl font-semibold tabular-nums tracking-tight">
+            <p className="mt-2 text-2xl font-semibold tracking-tight tabular-nums">
                 <AnimatedNumber value={value} format={format} />
             </p>
             {trendLabel && (

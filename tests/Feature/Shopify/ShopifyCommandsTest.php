@@ -1,10 +1,5 @@
 <?php
 
-/*
- * Sin credenciales en .env los comandos deben salir limpios con mensaje
- * claro, sin excepciones ni intentos de red.
- */
-
 it('shopify:ping avisa que faltan credenciales', function () {
     config(['shopify.store' => '', 'shopify.token' => '']);
 

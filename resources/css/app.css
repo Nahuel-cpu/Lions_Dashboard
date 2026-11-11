@@ -142,9 +142,7 @@
     }
 }
 
-/* Mapa Leaflet en modo oscuro: OSM sirve tiles claros solamente; con este
-   filtro invertimos el mapa para integrarlo al tema dark. Aplicado vía
-   className del <TileLayer> en components/lions/sales-map.tsx. */
 .map-tiles-dark img {
-    filter: brightness(0.6) invert(1) contrast(2.5) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+    filter: brightness(0.6) invert(1) contrast(2.5) hue-rotate(200deg)
+        saturate(0.3) brightness(0.7);
 }

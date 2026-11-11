@@ -86,7 +86,12 @@ export type OrderStatus = 'pendiente' | 'completado' | 'cancelado';
 
 export type Paginated<T> = {
     data: T[];
-    links: { first: string; last: string; next: string | null; prev: string | null };
+    links: {
+        first: string;
+        last: string;
+        next: string | null;
+        prev: string | null;
+    };
     current_page: number;
     last_page: number;
     per_page: number;
@@ -145,7 +150,12 @@ export type InventoryProps = {
     alertas: StockAlert[];
     resumen: { total_stock: number; valor: number; sku_bajo: number };
     categorias: { id: number; name: string }[];
-    filters: { categoria: number | null; solo_low: boolean; q: string | null; orden: string };
+    filters: {
+        categoria: number | null;
+        solo_low: boolean;
+        q: string | null;
+        orden: string;
+    };
 };
 
 export type CustomerRow = {
@@ -163,7 +173,12 @@ export type CustomerRow = {
 
 export type CustomersProps = {
     customers: Paginated<CustomerRow>;
-    summary: { nuevos: number; recurrentes: number; total: number; ticket_promedio: number };
+    summary: {
+        nuevos: number;
+        recurrentes: number;
+        total: number;
+        ticket_promedio: number;
+    };
     periodoDias: number;
     filters: { tipo: string; orden: string; q: string | null };
 };

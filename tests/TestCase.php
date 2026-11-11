@@ -10,9 +10,7 @@ abstract class TestCase extends BaseTestCase
 {
     protected function tearDown(): void
     {
-        // La caché estática de credenciales sobrevive al RefreshDatabase
-        // (es memoria del proceso, no de la DB): sin resetearla, las
-        // credenciales de un test se filtraban a los tests siguientes.
+
         Credentials::forget();
 
         parent::tearDown();

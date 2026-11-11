@@ -38,7 +38,7 @@ final class SyncShopifyOrderFromWebhook implements ShouldQueue
         $previo = $resultado['previousStatus'];
 
         if ($previo === null) {
-            // Pedido nuevo: el feed lo trata como ingreso.
+
             $customer = $order->customer()->first();
             $items = $order->items()->pluck('quantity')->sum();
 

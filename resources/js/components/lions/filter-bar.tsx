@@ -35,8 +35,12 @@ export default function FilterBar({
     updatedAt: string;
 }) {
     const [period, setPeriod] = useState(String(filters.period));
-    const [granularidad, setGranularidad] = useState<string>(filters.granularidad);
-    const [categoria, setCategoria] = useState(filters.categoria ? String(filters.categoria) : 'todas');
+    const [granularidad, setGranularidad] = useState<string>(
+        filters.granularidad,
+    );
+    const [categoria, setCategoria] = useState(
+        filters.categoria ? String(filters.categoria) : 'todas',
+    );
     const [pending, setPending] = useState(false);
 
     useEffect(() => {
@@ -45,10 +49,14 @@ export default function FilterBar({
         setCategoria(filters.categoria ? String(filters.categoria) : 'todas');
     }, [filters]);
 
-    const push = (next: { period?: string; granularidad?: string; categoria?: string } = {}) => {
+    const push = (
+        next: {
+            period?: string;
+            granularidad?: string;
+            categoria?: string;
+        } = {},
+    ) => {
         const gran = next.granularidad ?? granularidad;
-        // "Por mes" no tiene sentido con solo 7 días (un mes parcial raquítico):
-        // 7 días queda deshabilitado en esa granularidad y se salta a 30.
         let target = next.period ?? period;
         if (gran === 'mes' && target === '7') {
             target = '30';
@@ -69,7 +77,17 @@ export default function FilterBar({
             }).url,
             {},
             {
-                only: ['kpis', 'serie', 'top', 'mapa', 'categoriaShare', 'topCiudades', 'alertas', 'filters', 'updatedAt'],
+                only: [
+                    'kpis',
+                    'serie',
+                    'top',
+                    'mapa',
+                    'categoriaShare',
+                    'topCiudades',
+                    'alertas',
+                    'filters',
+                    'updatedAt',
+                ],
                 preserveState: true,
                 preserveScroll: true,
                 onStart: () => setPending(true),
@@ -86,7 +104,10 @@ export default function FilterBar({
                 onChange={(value) => push({ period: value })}
                 disabledValues={granularidad === 'mes' ? ['7'] : []}
             />
-            <Select value={granularidad} onValueChange={(value) => push({ granularidad: value })}>
+            <Select
+                value={granularidad}
+                onValueChange={(value) => push({ granularidad: value })}
+            >
                 <SelectTrigger size="sm" className="w-[140px]">
                     <SelectValue />
                 </SelectTrigger>
@@ -98,22 +119,36 @@ export default function FilterBar({
                     ))}
                 </SelectContent>
             </Select>
-            <Select value={categoria} onValueChange={(value) => push({ categoria: value })}>
+            <Select
+                value={categoria}
+                onValueChange={(value) => push({ categoria: value })}
+            >
                 <SelectTrigger size="sm" className="w-[150px]">
                     <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                     <SelectItem value="todas">Todas las categorías</SelectItem>
                     {categorias.map((category) => (
-                        <SelectItem key={category.id} value={String(category.id)}>
+                        <SelectItem
+                            key={category.id}
+                            value={String(category.id)}
+                        >
                             {category.name}
                         </SelectItem>
                     ))}
                 </SelectContent>
             </Select>
             <div className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
-                {pending && <span className="animate-pulse text-chart-1">Actualizando…</span>}
-                {!pending && <span>Actualizado {formatDateTime(updatedAt).slice(-5)}</span>}
+                {pending && (
+                    <span className="animate-pulse text-chart-1">
+                        Actualizando…
+                    </span>
+                )}
+                {!pending && (
+                    <span>
+                        Actualizado {formatDateTime(updatedAt).slice(-5)}
+                    </span>
+                )}
             </div>
         </div>
     );
@@ -139,13 +174,18 @@ function InlineTabs({
                         key={option.value}
                         onClick={() => onChange(option.value)}
                         disabled={disabled}
-                        title={disabled ? 'No disponible con la granularidad "Por mes"' : undefined}
+                        title={
+                            disabled
+                                ? 'No disponible con la granularidad "Por mes"'
+                                : undefined
+                        }
                         className={cn(
                             'rounded-md px-3 py-1.5 text-xs font-medium transition-colors',
                             value === option.value
                                 ? 'bg-primary text-primary-foreground'
                                 : 'text-muted-foreground hover:text-foreground',
-                            disabled && 'cursor-not-allowed opacity-40 hover:text-muted-foreground',
+                            disabled &&
+                                'cursor-not-allowed opacity-40 hover:text-muted-foreground',
                         )}
                     >
                         {option.label}

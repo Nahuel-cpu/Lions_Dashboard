@@ -2,12 +2,6 @@
 
 use App\Models\User;
 
-/*
- * Controles 03 (aislamiento) y 09 (permisos de administrador) de la guía de
- * seguridad 27 puntos: sólo is_admin accede al panel y a Settings → Shopify;
- * el registro público está deshabilitado.
- */
-
 it('usuario autenticado sin rol no accede al dashboard (403)', function () {
     $user = User::factory()->create();
     $this->actingAs($user)

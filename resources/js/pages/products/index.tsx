@@ -28,7 +28,10 @@ export default function Products(props: ProductsProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debounced]);
 
-    const navigate = (overrides: { categoria?: string | null; orden?: string }) => {
+    const navigate = (overrides: {
+        categoria?: string | null;
+        orden?: string;
+    }) => {
         router.get(
             productsRoute({
                 query: {
@@ -42,7 +45,11 @@ export default function Products(props: ProductsProps) {
                 },
             }).url,
             {},
-            { only: ['products', 'filters'], preserveState: true, preserveScroll: true },
+            {
+                only: ['products', 'filters'],
+                preserveState: true,
+                preserveScroll: true,
+            },
         );
     };
 
@@ -57,14 +64,17 @@ export default function Products(props: ProductsProps) {
                     className="flex flex-wrap items-center justify-between gap-4"
                 >
                     <div>
-                        <h1 className="text-xl font-bold tracking-tight">Productos</h1>
+                        <h1 className="text-xl font-bold tracking-tight">
+                            Productos
+                        </h1>
                         <p className="text-sm text-muted-foreground">
-                            Ventas de los últimos {periodo} días · {formatNumber(products.total)} modelos
+                            Ventas de los últimos {periodo} días ·{' '}
+                            {formatNumber(products.total)} modelos
                         </p>
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="relative w-64">
-                            <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                            <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
@@ -74,7 +84,11 @@ export default function Products(props: ProductsProps) {
                         </div>
                         <Select
                             value={String(filters.categoria ?? 'todas')}
-                            onValueChange={(value) => navigate({ categoria: value === 'todas' ? null : value })}
+                            onValueChange={(value) =>
+                                navigate({
+                                    categoria: value === 'todas' ? null : value,
+                                })
+                            }
                         >
                             <SelectTrigger className="w-[150px]">
                                 <SelectValue />
@@ -82,20 +96,34 @@ export default function Products(props: ProductsProps) {
                             <SelectContent>
                                 <SelectItem value="todas">Todas</SelectItem>
                                 {categorias.map((category) => (
-                                    <SelectItem key={category.id} value={String(category.id)}>
+                                    <SelectItem
+                                        key={category.id}
+                                        value={String(category.id)}
+                                    >
                                         {category.name}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
-                        <Select value={filters.orden} onValueChange={(value) => navigate({ orden: value })}>
+                        <Select
+                            value={filters.orden}
+                            onValueChange={(value) =>
+                                navigate({ orden: value })
+                            }
+                        >
                             <SelectTrigger className="w-[160px]">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="ventas">Más vendidos</SelectItem>
-                                <SelectItem value="revenue">Más ingresos</SelectItem>
-                                <SelectItem value="stock_asc">Menor stock</SelectItem>
+                                <SelectItem value="ventas">
+                                    Más vendidos
+                                </SelectItem>
+                                <SelectItem value="revenue">
+                                    Más ingresos
+                                </SelectItem>
+                                <SelectItem value="stock_asc">
+                                    Menor stock
+                                </SelectItem>
                                 <SelectItem value="nombre">Nombre</SelectItem>
                             </SelectContent>
                         </Select>
@@ -104,9 +132,16 @@ export default function Products(props: ProductsProps) {
 
                 <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
                     {products.data.map((product, index) => {
-                        const stock = product.variants.reduce((sum, variant) => sum + variant.stock, 0);
+                        const stock = product.variants.reduce(
+                            (sum, variant) => sum + variant.stock,
+                            0,
+                        );
                         const lowSize = product.variants
-                            .filter((variant) => variant.stock <= product.low_stock_threshold)
+                            .filter(
+                                (variant) =>
+                                    variant.stock <=
+                                    product.low_stock_threshold,
+                            )
                             .map((variant) => variant.size);
 
                         return (
@@ -119,7 +154,9 @@ export default function Products(props: ProductsProps) {
                             >
                                 <div className="mb-3 flex items-start justify-between gap-2">
                                     <div>
-                                        <p className="font-semibold">{product.name}</p>
+                                        <p className="font-semibold">
+                                            {product.name}
+                                        </p>
                                         <p className="text-xs text-muted-foreground">
                                             {product.category} · {product.sku}
                                         </p>
@@ -130,16 +167,33 @@ export default function Products(props: ProductsProps) {
                                 </div>
                                 <div className="grid grid-cols-3 gap-2 text-center">
                                     <div className="rounded-lg bg-muted/50 p-2">
-                                        <p className="text-[11px] text-muted-foreground">Vendidos</p>
-                                        <p className="text-sm font-semibold tabular-nums">{formatNumber(Number(product.units))}</p>
+                                        <p className="text-[11px] text-muted-foreground">
+                                            Vendidos
+                                        </p>
+                                        <p className="text-sm font-semibold tabular-nums">
+                                            {formatNumber(
+                                                Number(product.units),
+                                            )}
+                                        </p>
                                     </div>
                                     <div className="rounded-lg bg-muted/50 p-2">
-                                        <p className="text-[11px] text-muted-foreground">Ingresos</p>
-                                        <p className="text-sm font-semibold tabular-nums">{formatCurrency(Number(product.revenue), true)}</p>
+                                        <p className="text-[11px] text-muted-foreground">
+                                            Ingresos
+                                        </p>
+                                        <p className="text-sm font-semibold tabular-nums">
+                                            {formatCurrency(
+                                                Number(product.revenue),
+                                                true,
+                                            )}
+                                        </p>
                                     </div>
                                     <div className="rounded-lg bg-muted/50 p-2">
-                                        <p className="text-[11px] text-muted-foreground">Stock</p>
-                                        <p className="text-sm font-semibold tabular-nums">{formatNumber(stock)}</p>
+                                        <p className="text-[11px] text-muted-foreground">
+                                            Stock
+                                        </p>
+                                        <p className="text-sm font-semibold tabular-nums">
+                                            {formatNumber(stock)}
+                                        </p>
                                     </div>
                                 </div>
                                 {lowSize.length > 0 && (
@@ -158,5 +212,8 @@ export default function Products(props: ProductsProps) {
 }
 
 Products.layout = {
-    breadcrumbs: [{ title: 'Panel Lions', href: '' }, { title: 'Productos', href: '' }],
+    breadcrumbs: [
+        { title: 'Panel Lions', href: '' },
+        { title: 'Productos', href: '' },
+    ],
 };

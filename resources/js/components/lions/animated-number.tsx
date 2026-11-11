@@ -1,11 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { animate, useInView } from 'framer-motion';
 
-/**
- * Contador animado: al entrar en viewport, el número sube de 0 al valor final
- * con easing suave. Cada vez que el valor cambia, la animación re-arranca
- * desde el valor mostrado actualmente (ideal para live updates).
- */
 export default function AnimatedNumber({
     value,
     format,
@@ -47,7 +42,8 @@ export default function AnimatedNumber({
         previousRef.current = display;
     }, [display, inView]);
 
-    const formatter = format ?? ((n: number) => Math.round(n).toLocaleString('es-AR'));
+    const formatter =
+        format ?? ((n: number) => Math.round(n).toLocaleString('es-AR'));
 
     return (
         <span ref={ref} className={className}>

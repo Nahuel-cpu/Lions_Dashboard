@@ -2,9 +2,6 @@
 
 use App\Services\Shopify\OrderStatusMap;
 
-/*
- * Traducción de estados Shopify → locales usada por la sincronización.
- */
 it('mapea estados de Shopify a estados del dashboard', function (array $shopify, string $local) {
     expect(OrderStatusMap::toLocal($shopify[0], $shopify[1], $shopify[2]))->toBe($local);
 })->with([

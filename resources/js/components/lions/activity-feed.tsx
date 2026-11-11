@@ -31,7 +31,6 @@ export default function ActivityFeed({ initial }: { initial: ActivityItem[] }) {
         setItems(initial);
     }, [initial]);
 
-    // Encolar ítems que llegan por WebSocket (el hook en la página los inyecta)
     useEffect(() => {
         const handler = (event: Event) => {
             const detail = (event as CustomEvent<ActivityItem>).detail;
@@ -59,16 +58,36 @@ export default function ActivityFeed({ initial }: { initial: ActivityItem[] }) {
                             initial={{ opacity: 0, x: 24, height: 0 }}
                             animate={{ opacity: 1, x: 0, height: 'auto' }}
                             exit={{ opacity: 0, x: -24, height: 0 }}
-                            transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                            className={cn('flex gap-3 overflow-hidden py-2.5', index > 0 && 'border-t border-border/60')}
-                            style={index > 5 ? { opacity: 1 - (index - 5) * 0.15 } : undefined}
+                            transition={{
+                                type: 'spring',
+                                stiffness: 320,
+                                damping: 28,
+                            }}
+                            className={cn(
+                                'flex gap-3 overflow-hidden py-2.5',
+                                index > 0 && 'border-t border-border/60',
+                            )}
+                            style={
+                                index > 5
+                                    ? { opacity: 1 - (index - 5) * 0.15 }
+                                    : undefined
+                            }
                         >
-                            <span className={cn('mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg', color)}>
+                            <span
+                                className={cn(
+                                    'mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg',
+                                    color,
+                                )}
+                            >
                                 <Icon className="size-4" />
                             </span>
                             <div className="min-w-0 flex-1">
-                                <p className="truncate text-sm font-medium">{item.title}</p>
-                                <p className="truncate text-xs text-muted-foreground">{item.description}</p>
+                                <p className="truncate text-sm font-medium">
+                                    {item.title}
+                                </p>
+                                <p className="truncate text-xs text-muted-foreground">
+                                    {item.description}
+                                </p>
                                 <p className="mt-0.5 text-[11px] text-muted-foreground/70">
                                     {formatDateTime(item.at)}
                                 </p>
@@ -83,9 +102,6 @@ export default function ActivityFeed({ initial }: { initial: ActivityItem[] }) {
     );
 }
 
-/** Inserta un item de actividad nuevo desde cualquier parte de la app. */
 export function pushActivity(item: ActivityItem): void {
-    window.dispatchEvent(
-        new CustomEvent('lions:actividad', { detail: item }),
-    );
+    window.dispatchEvent(new CustomEvent('lions:actividad', { detail: item }));
 }

@@ -6,13 +6,6 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
-/*
- * El endpoint de webhooks debe rechazar firmas inválidas y encolar el
- * procesamiento cuando la firma HMAC-SHA256 de Shopify es correcta.
- *
- * Shopify firma el body EN BRUTO: hay que mandar los bytes exactos del
- * JSON, sin re-encodear (por eso POST con array no sirve en este test).
- */
 function shopifyWebhookPost(string $payload, ?string $firma, string $topic = 'orders/update'): TestResponse
 {
     /** @var TestCase $test */

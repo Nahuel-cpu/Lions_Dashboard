@@ -14,11 +14,9 @@ it('vaciar demo borra solo lo sin shopify_id y deja lo real', function () {
     $user = User::factory()->admin()->create();
     $this->actingAs($user);
 
-    // demo: pedido sin shopify_id
     $demoCustomer = Customer::create(['name' => 'Demo', 'email' => 'demo@x.com', 'city' => 'BA', 'region' => 'BA', 'lat' => 0, 'lng' => 0]);
     Order::create(['customer_id' => $demoCustomer->id, 'status' => 'completado', 'total' => 1000, 'ordered_at' => now()]);
 
-    // real: pedido de shopify
     $realCustomer = Customer::create(['name' => 'Real', 'email' => 'real@x.com', 'city' => 'BA', 'region' => 'BA', 'lat' => 0, 'lng' => 0, 'shopify_id' => 'gid://shopify/Customer/2']);
     Order::create(['customer_id' => $realCustomer->id, 'status' => 'completado', 'total' => 5000, 'ordered_at' => now(), 'shopify_id' => 'gid://shopify/Order/1']);
     Activity::create(['type' => 'venta', 'title' => 't', 'description' => 'd', 'performed_at' => now()]);
@@ -37,7 +35,7 @@ it('sincronizar sin credenciales da error amigable', function () {
     $this->actingAs($user);
 
     $response = $this->post('/settings/shopify/sincronizar')->assertRedirect();
-    // Inertia::flash() guarda bajo la key 'inertia.flash_data', no 'toast' suelto
+
     $toast = $response->getSession()->get('inertia.flash_data')['toast'] ?? null;
 
     expect($toast['type'] ?? null)->toBe('error')
@@ -57,7 +55,6 @@ it('sincronizar corre wipe + import completo contra shopify fake', function () {
     $this->actingAs($user)
         ->post('/settings/shopify', ['store_domain' => 't.myshopify.com', 'client_id' => 'cli', 'client_secret' => 'sec']);
 
-    // demo preexistente que debe ser borrado antes de importar
     $demoCustomer = Customer::create(['name' => 'Demo', 'email' => 'demo@x.com', 'city' => 'BA', 'region' => 'BA', 'lat' => 0, 'lng' => 0]);
 
     $response = $this->post(route('settings.shopify.sync'))->assertRedirect();

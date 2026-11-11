@@ -21,8 +21,6 @@ final class Importer
 {
     public function __construct(private readonly ShopifyConnector $api) {}
 
-    // ------------------------------------------------------------- catálogo
-
     /**
      * @param  string|null  $after  Cursor de paginación de Shopify.
      * @return array<string, mixed> {processed, cursor, done}
@@ -75,8 +73,6 @@ final class Importer
         ];
     }
 
-    // ------------------------------------------------------------ clientes
-
     /**
      * @return array<string, mixed>
      */
@@ -112,8 +108,6 @@ final class Importer
         return ['processed' => count($edges), 'cursor' => $cursor, 'done' => $done];
     }
 
-    // --------------------------------------------------------------- pedidos
-
     /**
      * @return array<string, mixed>
      */
@@ -121,7 +115,7 @@ final class Importer
     {
         $filters = ['first' => (int) config('shopify.pagination', 250), 'after' => $after];
         if ($since !== null && $since !== '') {
-            // Sintaxis de búsqueda de Shopify, SIN %-encoding.
+
             $filters['query'] = 'updated_at:>='.$since;
         }
 
@@ -166,8 +160,6 @@ final class Importer
         return ['processed' => count($edges), 'cursor' => $cursor, 'done' => $done];
     }
 
-    // ---------------------------------------------------- sincronización completa
-
     /**
      * Import completo: recorre todas las páginas de productos, clientes y
      * pedidos. Es el mismo trabajo que hace `shopify:import`, pero callable
@@ -210,10 +202,6 @@ final class Importer
 
         return $pages;
     }
-
-    // ---------------------------------------------------- upserts reutilizables
-
-    // ---------------------------------------------------------- helpers privados
 
     /** @param array<mixed> $node */
     private function upsertProduct(array $node): void
@@ -440,7 +428,7 @@ final class Importer
             : $this->anonymousCustomerId();
 
         $status = OrderStatusMap::toLocal(
-            // En >= 2025-01 los campos display* reemplazan a los "raw".
+
             $node['displayFinancialStatus'] ?? $node['financialStatus'] ?? null,
             $node['displayFulfillmentStatus'] ?? $node['fulfillmentStatus'] ?? null,
             $node['cancelledAt'] ?? null,
@@ -457,8 +445,6 @@ final class Importer
             ],
         );
 
-        // Recrear completa la lista de items para que el upsert sea idempotente
-        // incluso cuando Shopify agrega o quita line items.
         OrderItem::query()->where('order_id', $order->id)->delete();
 
         $nodes = array_map(fn ($e) => (array) ($e['node'] ?? []), (array) ($node['lineItems']['edges'] ?? []));
@@ -482,8 +468,6 @@ final class Importer
             ]);
         }
 
-        // Actividad sólo para eventos en vivo (webhook); el backfill masivo
-        // no inunda el feed con miles de entradas.
         if ($logActivity) {
             Activity::create([
                 'type' => 'pedido',

@@ -31,7 +31,8 @@ export default function Customers(props: CustomersProps) {
 
     const navigate = (tipo: string, orden: string, q: string) => {
         router.get(
-            customersRoute({ query: { tipo, orden, q: q ? q : undefined } }).url,
+            customersRoute({ query: { tipo, orden, q: q ? q : undefined } })
+                .url,
             {},
             {
                 only: ['customers', 'summary', 'filters'],
@@ -59,9 +60,11 @@ export default function Customers(props: CustomersProps) {
                     animate={{ opacity: 1, y: 0 }}
                     className="flex flex-wrap items-center justify-between gap-4"
                 >
-                    <h1 className="text-xl font-bold tracking-tight">Clientes</h1>
+                    <h1 className="text-xl font-bold tracking-tight">
+                        Clientes
+                    </h1>
                     <div className="relative w-full max-w-xs">
-                        <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
@@ -72,9 +75,21 @@ export default function Customers(props: CustomersProps) {
                 </motion.div>
 
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                    <Summary label="Nuevos (30 días)" value={summary.nuevos} icon={UserPlus} />
-                    <Summary label="Recurrentes" value={summary.recurrentes} icon={Sparkles} />
-                    <Summary label="Base total" value={summary.total} icon={UsersRound} />
+                    <Summary
+                        label="Nuevos (30 días)"
+                        value={summary.nuevos}
+                        icon={UserPlus}
+                    />
+                    <Summary
+                        label="Recurrentes"
+                        value={summary.recurrentes}
+                        icon={Sparkles}
+                    />
+                    <Summary
+                        label="Base total"
+                        value={summary.total}
+                        icon={UsersRound}
+                    />
                     <Summary
                         label="Ticket promedio (30d)"
                         value={summary.ticket_promedio}
@@ -103,7 +118,9 @@ export default function Customers(props: CustomersProps) {
                     ))}
                     <Select
                         value={filters.orden}
-                        onValueChange={(value) => navigate(tab, value, debounced)}
+                        onValueChange={(value) =>
+                            navigate(tab, value, debounced)
+                        }
                     >
                         <SelectTrigger className="w-[170px]">
                             <SelectValue />
@@ -111,42 +128,86 @@ export default function Customers(props: CustomersProps) {
                         <SelectContent>
                             <SelectItem value="revenue">Más gastos</SelectItem>
                             <SelectItem value="pedidos">Más pedidos</SelectItem>
-                            <SelectItem value="reciente">Más recientes</SelectItem>
+                            <SelectItem value="reciente">
+                                Más recientes
+                            </SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
 
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="overflow-hidden rounded-xl border bg-card shadow-sm">
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="overflow-hidden rounded-xl border bg-card shadow-sm"
+                >
                     <div className="overflow-x-auto">
                         <table className="w-full min-w-[720px] text-sm">
-                            <thead className="border-b bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
+                            <thead className="border-b bg-muted/40 text-left text-xs tracking-wide text-muted-foreground uppercase">
                                 <tr>
-                                    <th className="px-4 py-3 font-medium">Cliente</th>
-                                    <th className="px-4 py-3 font-medium">Ciudad</th>
-                                    <th className="px-4 py-3 font-medium">Registrado</th>
-                                    <th className="px-4 py-3 text-right font-medium">Pedidos</th>
-                                    <th className="px-4 py-3 text-right font-medium">Gasto total</th>
-                                    <th className="px-4 py-3 font-medium">Último pedido</th>
+                                    <th className="px-4 py-3 font-medium">
+                                        Cliente
+                                    </th>
+                                    <th className="px-4 py-3 font-medium">
+                                        Ciudad
+                                    </th>
+                                    <th className="px-4 py-3 font-medium">
+                                        Registrado
+                                    </th>
+                                    <th className="px-4 py-3 text-right font-medium">
+                                        Pedidos
+                                    </th>
+                                    <th className="px-4 py-3 text-right font-medium">
+                                        Gasto total
+                                    </th>
+                                    <th className="px-4 py-3 font-medium">
+                                        Último pedido
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {customers.data.map((customer) => (
-                                    <tr key={customer.id} className="border-b border-border/50 transition-colors hover:bg-muted/30">
+                                    <tr
+                                        key={customer.id}
+                                        className="border-b border-border/50 transition-colors hover:bg-muted/30"
+                                    >
                                         <td className="px-4 py-2.5">
-                                            <p className="font-medium">{customer.name}</p>
-                                            <p className="text-xs text-muted-foreground">{customer.email}</p>
+                                            <p className="font-medium">
+                                                {customer.name}
+                                            </p>
+                                            <p className="text-xs text-muted-foreground">
+                                                {customer.email}
+                                            </p>
                                         </td>
-                                        <td className="px-4 py-2.5 text-muted-foreground">{customer.city}</td>
-                                        <td className="px-4 py-2.5 text-muted-foreground">{formatDateTime(customer.created_at)}</td>
-                                        <td className="px-4 py-2.5 text-right tabular-nums">
-                                            <span className="font-semibold">{formatNumber(customer.completed_orders)}</span>
-                                            {customer.pending_orders > 0 && (
-                                                <span className="ml-1 text-xs text-amber-500">+{customer.pending_orders} pend</span>
+                                        <td className="px-4 py-2.5 text-muted-foreground">
+                                            {customer.city}
+                                        </td>
+                                        <td className="px-4 py-2.5 text-muted-foreground">
+                                            {formatDateTime(
+                                                customer.created_at,
                                             )}
                                         </td>
-                                        <td className="px-4 py-2.5 text-right font-semibold tabular-nums">{formatCurrency(customer.revenue)}</td>
+                                        <td className="px-4 py-2.5 text-right tabular-nums">
+                                            <span className="font-semibold">
+                                                {formatNumber(
+                                                    customer.completed_orders,
+                                                )}
+                                            </span>
+                                            {customer.pending_orders > 0 && (
+                                                <span className="ml-1 text-xs text-amber-500">
+                                                    +{customer.pending_orders}{' '}
+                                                    pend
+                                                </span>
+                                            )}
+                                        </td>
+                                        <td className="px-4 py-2.5 text-right font-semibold tabular-nums">
+                                            {formatCurrency(customer.revenue)}
+                                        </td>
                                         <td className="px-4 py-2.5 text-muted-foreground">
-                                            {customer.last_order ? formatDateTime(customer.last_order) : '—'}
+                                            {customer.last_order
+                                                ? formatDateTime(
+                                                      customer.last_order,
+                                                  )
+                                                : '—'}
                                         </td>
                                     </tr>
                                 ))}
@@ -156,7 +217,8 @@ export default function Customers(props: CustomersProps) {
                 </motion.div>
 
                 <p className="text-center text-xs text-muted-foreground">
-                    Página {customers.current_page} de {customers.last_page} · {formatNumber(customers.total)} clientes
+                    Página {customers.current_page} de {customers.last_page} ·{' '}
+                    {formatNumber(customers.total)} clientes
                 </p>
             </div>
         </>
@@ -190,5 +252,8 @@ function Summary({
 }
 
 Customers.layout = {
-    breadcrumbs: [{ title: 'Panel Lions', href: '' }, { title: 'Clientes', href: '' }],
+    breadcrumbs: [
+        { title: 'Panel Lions', href: '' },
+        { title: 'Clientes', href: '' },
+    ],
 };

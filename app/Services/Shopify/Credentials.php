@@ -30,8 +30,7 @@ final class Credentials
     /** Token estático legacy (SHOPIFY_ACCESS_TOKEN en .env). Vacío = usar client credentials. */
     public static function token(): string
     {
-        // Ojo: NO leer access_token de la fila acá — esa columna es la caché
-        // que maneja AccessTokenProvider (podría estar vencida).
+
         return (string) config('shopify.token');
     }
 

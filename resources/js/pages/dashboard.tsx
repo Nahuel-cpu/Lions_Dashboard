@@ -17,8 +17,11 @@ import OperationsBridge from '@/components/lions/operations-bridge';
 import StockAlerts from '@/components/lions/stock-alerts';
 import SalesMap from '@/components/lions/sales-map';
 import { OrdersBarChart, SalesAreaChart } from '@/components/lions/sales-chart';
-import { CategoryDonut, TopCities, TopProducts } from '@/components/lions/panels';
-import AnimatedNumber from '@/components/lions/animated-number';
+import {
+    CategoryDonut,
+    TopCities,
+    TopProducts,
+} from '@/components/lions/panels';
 import { dashboard } from '@/routes';
 import type { DashboardProps } from '@/types/lions';
 import { formatCurrency, formatNumber, formatPercent } from '@/lib/format';
@@ -53,8 +56,19 @@ function Panel({
 }
 
 export default function Dashboard(props: DashboardProps) {
-    const { kpis, serie, top, mapa, alertas, actividad, categorias, categoriaShare, topCiudades, filters, updatedAt } =
-        props;
+    const {
+        kpis,
+        serie,
+        top,
+        mapa,
+        alertas,
+        actividad,
+        categorias,
+        categoriaShare,
+        topCiudades,
+        filters,
+        updatedAt,
+    } = props;
 
     return (
         <>
@@ -68,17 +82,22 @@ export default function Dashboard(props: DashboardProps) {
                     className="flex flex-wrap items-center justify-between gap-4"
                 >
                     <div>
-                        <h1 className="text-xl font-bold tracking-tight">Panel de operaciones</h1>
-                    <p className="text-sm text-muted-foreground">
-                        Actualización en vivo · Zapatos Lions
-                    </p>
+                        <h1 className="text-xl font-bold tracking-tight">
+                            Panel de operaciones
+                        </h1>
+                        <p className="text-sm text-muted-foreground">
+                            Actualización en vivo · Zapatos Lions
+                        </p>
                     </div>
-                    <div className="flex shrink-0 flex-1 justify-end min-w-[480px]">
-                        <FilterBar filters={filters} categorias={categorias} updatedAt={updatedAt} />
+                    <div className="flex min-w-[480px] flex-1 shrink-0 justify-end">
+                        <FilterBar
+                            filters={filters}
+                            categorias={categorias}
+                            updatedAt={updatedAt}
+                        />
                     </div>
                 </motion.div>
 
-                {/* KPIs */}
                 <div className="grid grid-cols-2 gap-4 xl:grid-cols-6">
                     <KpiCard
                         index={0}
@@ -134,22 +153,28 @@ export default function Dashboard(props: DashboardProps) {
                     />
                 </div>
 
-                {/* Serie temporal + torta */}
                 <div className="grid gap-4 xl:grid-cols-3">
                     <Panel
                         title="Ventas del período"
-                        action={<span className="text-xs text-muted-foreground">{formatCurrency(kpis.revenue, true)} en completados</span>}
+                        action={
+                            <span className="text-xs text-muted-foreground">
+                                {formatCurrency(kpis.revenue, true)} en
+                                completados
+                            </span>
+                        }
                         className="xl:col-span-2"
                         delay={0.15}
                     >
-                        <SalesAreaChart data={serie} granularidad={filters.granularidad} />
+                        <SalesAreaChart
+                            data={serie}
+                            granularidad={filters.granularidad}
+                        />
                     </Panel>
                     <Panel title="Ingreso por categoría" delay={0.2}>
                         <CategoryDonut share={categoriaShare} />
                     </Panel>
                 </div>
 
-                {/* Mapa + top productos + alertas */}
                 <div className="grid gap-4 xl:grid-cols-3">
                     <Panel
                         title="Distribución de ventas"
@@ -169,16 +194,21 @@ export default function Dashboard(props: DashboardProps) {
                         <Panel
                             title="Alertas de stock"
                             delay={0.35}
-                            action={<span className="text-xs text-muted-foreground">{alertas.length} variantes</span>}
+                            action={
+                                <span className="text-xs text-muted-foreground">
+                                    {alertas.length} variantes
+                                </span>
+                            }
                         >
                             <StockAlerts alerts={alertas} />
                         </Panel>
                     </div>
                 </div>
 
-                {/* Actividad real + pedidos por bucket */}
                 <div className="grid gap-4 xl:grid-cols-3">
-                    <Panel title="Actividad en tiempo real" delay={0.4}
+                    <Panel
+                        title="Actividad en tiempo real"
+                        delay={0.4}
                         action={
                             <span className="flex items-center gap-1.5 text-xs text-emerald-500">
                                 <span className="relative flex size-2">
@@ -194,14 +224,24 @@ export default function Dashboard(props: DashboardProps) {
                         </div>
                     </Panel>
 
-                    <Panel title="Pedidos por período" className="xl:col-span-2" delay={0.45}>
-                        <OrdersBarChart data={serie} granularidad={filters.granularidad} />
+                    <Panel
+                        title="Pedidos por período"
+                        className="xl:col-span-2"
+                        delay={0.45}
+                    >
+                        <OrdersBarChart
+                            data={serie}
+                            granularidad={filters.granularidad}
+                        />
                         <div className="mt-3 flex flex-wrap gap-6 border-t border-border/60 pt-3 text-xs text-muted-foreground">
                             <span className="flex items-center gap-1.5">
-                                <ShoppingCart className="size-3.5" /> {formatNumber(kpis.orders)} completados · ticket {formatCurrency(kpis.avg_ticket)}
+                                <ShoppingCart className="size-3.5" />{' '}
+                                {formatNumber(kpis.orders)} completados · ticket{' '}
+                                {formatCurrency(kpis.avg_ticket)}
                             </span>
                             <span className="flex items-center gap-1.5">
-                                <Box className="size-3.5" /> {kpis.cancelled} cancelados en el período
+                                <Box className="size-3.5" /> {kpis.cancelled}{' '}
+                                cancelados en el período
                             </span>
                         </div>
                     </Panel>

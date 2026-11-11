@@ -11,13 +11,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
 
-// Webhooks de Shopify: sin auth (verifican su propia firma HMAC) y sin
-// verificación CSRF (las requests POST vienen de servidor a servidor).
 Route::post('webhooks/shopify', [ShopifyWebhookController::class, 'store'])
     ->name('webhooks.shopify');
 
-// Panel completo: sólo administradores (Gate 'admin' en AppServiceProvider).
-// Registro público deshabilitado: las cuentas las crea el dueño (seeder/DB).
 Route::middleware(['auth', 'verified', 'can:admin'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

@@ -114,9 +114,7 @@ class AnalyticsService
         $result = [];
         $cursor = $from->copy()->startOfDay();
         while ($cursor <= now()) {
-            // El bucket actual es el que contiene al cursor; el siguiente cursor
-            // salta al inicio del siguiente bucket para no saltarse el
-            // mes/semana en curso cuando su inicio cae después de hoy.
+
             [$bucket, $nextCursor] = match ($granularity) {
                 'week' => [
                     $cursor->copy()->startOfWeek()->toDateString(),

@@ -1,4 +1,3 @@
-/** $ 12.345.678 */
 export const formatCurrency = (value: number, compact = false): string =>
     new Intl.NumberFormat('es-AR', {
         style: 'currency',
@@ -8,7 +7,6 @@ export const formatCurrency = (value: number, compact = false): string =>
             compact && Math.abs(value) >= 1_000_000 ? 'compact' : 'standard',
     }).format(value);
 
-/** 12.345.678 */
 export const formatNumber = (value: number, compact = false): string =>
     new Intl.NumberFormat('es-AR', {
         maximumFractionDigits: 0,
@@ -16,14 +14,12 @@ export const formatNumber = (value: number, compact = false): string =>
             compact && Math.abs(value) >= 100_000 ? 'compact' : 'standard',
     }).format(value);
 
-/** +12,3% */
 export const formatPercent = (value: number, digits = 1): string =>
     `${value > 0 ? '+' : ''}${value.toLocaleString('es-AR', {
         minimumFractionDigits: digits,
         maximumFractionDigits: digits,
     })}%`;
 
-/** '2026-11-07' → '7 nov' / 'nov 26' según la granularidad */
 export const formatBucket = (bucket: string, granularidad: string): string => {
     if (granularidad === 'mes') {
         const [year, month] = bucket.split('-');
@@ -35,7 +31,6 @@ export const formatBucket = (bucket: string, granularidad: string): string => {
     return date.toLocaleDateString('es-AR', { day: '2-digit', month: 'short' });
 };
 
-/** ISO → '7 nov 14:35' */
 export const formatDateTime = (iso: string): string => {
     const date = new Date(iso);
     const dateStr = date.toLocaleDateString('es-AR', {
