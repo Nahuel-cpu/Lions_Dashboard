@@ -93,7 +93,7 @@ class InventoryController extends Controller
         ]);
 
         if ($variant->stock <= $product->low_stock_threshold) {
-            broadcast(new StockLow($product->name, $variant->size, $variant->stock, $at))->toOthers();
+            broadcast_safely(new StockLow($product->name, $variant->size, $variant->stock, $at));
 
             return back()->with('warning', sprintf('Reposición cargada; %s talle %d sigue en stock bajo (%d).', $product->name, $variant->size, $variant->stock));
         }

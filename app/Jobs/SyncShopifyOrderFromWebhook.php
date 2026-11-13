@@ -42,20 +42,20 @@ final class SyncShopifyOrderFromWebhook implements ShouldQueue
             $customer = $order->customer()->first();
             $items = $order->items()->pluck('quantity')->sum();
 
-            OrderCreated::dispatch(
+            broadcast_safely(new OrderCreated(
                 (string) $order->id,
                 $customer !== null ? $customer->name : 'Cliente Shopify',
                 (float) $order->total,
                 $customer !== null ? $customer->city : '(sin ciudad)',
                 (int) $items,
                 $now,
-            )->toOthers();
+            ));
 
             return;
         }
 
         if ($previo !== $order->status) {
-            OrderStatusChanged::dispatch((string) $order->id, (string) $previo, (string) $order->status, $now)->toOthers();
+            broadcast_safely(new OrderStatusChanged((string) $order->id, (string) $previo, (string) $order->status, $now));
         }
     }
 }

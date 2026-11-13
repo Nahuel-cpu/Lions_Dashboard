@@ -77,7 +77,7 @@ class OrdersController extends Controller
             'performed_at' => now(),
         ]);
 
-        broadcast(new OrderStatusChanged((string) $order->id, $from, 'completado', $at))->toOthers();
+        broadcast_safely(new OrderStatusChanged((string) $order->id, $from, 'completado', $at));
 
         return back()->with('success', 'Pedido #'.$order->id.' confirmado.');
     }

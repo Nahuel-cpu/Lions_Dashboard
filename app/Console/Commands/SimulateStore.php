@@ -113,7 +113,7 @@ class SimulateStore extends Command
         $variant->decrement('stock', $qty);
 
         if ($variant->stock - $qty <= $product->low_stock_threshold) {
-            broadcast(new StockLow($product->name, $variant->size, max(0, $variant->stock - $qty), now()->toIso8601String()))->toOthers();
+            broadcast_safely(new StockLow($product->name, $variant->size, max(0, $variant->stock - $qty), now()->toIso8601String()));
         }
 
         $order->update(['total' => $total]);
@@ -125,14 +125,14 @@ class SimulateStore extends Command
             'performed_at' => now(),
         ]);
 
-        broadcast(new OrderCreated(
+        broadcast_safely(new OrderCreated(
             (string) $order->id,
             $customer->name,
             (float) $total,
             $customer->city,
             $qty,
             now()->toIso8601String(),
-        ))->toOthers();
+        ));
 
         $this->line(sprintf('[%s] pedido #%d +$%s', now()->format('H:i:s'), $order->id, number_format($total, 0, ',', '.')));
     }
@@ -155,7 +155,7 @@ class SimulateStore extends Command
             'performed_at' => now(),
         ]);
 
-        broadcast(new OrderStatusChanged((string) $order->id, 'pendiente', 'completado', now()->toIso8601String()))->toOthers();
+        broadcast_safely(new OrderStatusChanged((string) $order->id, 'pendiente', 'completado', now()->toIso8601String()));
 
         $this->line(sprintf('[%s] venta #%d confirmada', now()->format('H:i:s'), $order->id));
     }
@@ -183,7 +183,7 @@ class SimulateStore extends Command
         ]);
 
         if ($variant->stock <= $product->low_stock_threshold) {
-            broadcast(new StockLow($product->name, $variant->size, $variant->stock, now()->toIso8601String()))->toOthers();
+            broadcast_safely(new StockLow($product->name, $variant->size, $variant->stock, now()->toIso8601String()));
         }
 
         $this->line(sprintf('[%s] stock %s talle %d +%d', now()->format('H:i:s'), $product->name, $variant->size, $added));
