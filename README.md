@@ -102,7 +102,13 @@ Usuarios de acceso:
 
 - **admin@lions.com / lions1234** (único rol: administrador)
 
-En cuatro terminales (o `composer dev` para tres de ellas):
+En una sola terminal (arranca servidor, cola, Vite y Reverb):
+
+```bash
+composer dev    # server :8000 · vite · queue:listen · reverb :8080
+```
+
+O por separado:
 
 ```bash
 php artisan serve                    # http://localhost:8000
@@ -110,6 +116,10 @@ npm run dev                          # assets con HMR
 php artisan reverb:start             # WebSocket :8080
 php artisan lions:simular            # actividad en tiempo real simulada
 ```
+
+> **Importante:** sin Reverb corriendo, cualquier acción que emita eventos
+> (confirmar pedido, reponer stock, `lions:simular`, webhooks) lanza
+> `BroadcastException` porque la app publica los eventos en `localhost:8080`.
 
 ## Procesos automáticos
 
