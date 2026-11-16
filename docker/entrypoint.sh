@@ -3,6 +3,9 @@ set -e
 
 cd /var/www/html
 
+# El FS es persistente entre restarts: limpiar el flag de readiness anterior
+rm -f /tmp/ready
+
 # Directorios ignorados por .dockerignore: recrearlos al arrancar
 mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views \
         storage/logs storage/app/public bootstrap/cache
@@ -19,10 +22,18 @@ if [ "$1" = "php-fpm" ]; then
         chown www-data:www-data database/database.sqlite
     fi
 
-    # APP_KEY: si no viene en .env.docker, generar una por arranque (sólo demo;
-    # para uso real fijar APP_KEY en .env.docker con `php artisan key:generate --show`)
+    # APP_KEY: si no viene en .env.docker, generarla una vez y guardarla en el
+    # volumen de storage para que sobreviva a restarts (si cambia en cada
+    # arranque, se invalidan sesiones y cookies cifradas).
     if [ -z "${APP_KEY:-}" ]; then
-        APP_KEY=$(php artisan key:generate --show)
+        KEY_FILE=storage/app/.app_key
+        if [ -f "$KEY_FILE" ]; then
+            APP_KEY=$(cat "$KEY_FILE")
+        else
+            APP_KEY=$(php artisan key:generate --show)
+            echo "$APP_KEY" > "$KEY_FILE"
+            chown www-data:www-data "$KEY_FILE"
+        fi
         export APP_KEY
     fi
 
@@ -34,5 +45,8 @@ if [ "$1" = "php-fpm" ]; then
         php artisan db:seed --force
     fi
 fi
+
+# Migración y seed terminaron: marcar readiness para el healthcheck de compose
+touch /tmp/ready
 
 exec "$@"

@@ -2,6 +2,7 @@ services:
     app:
         build:
             context: .
+            target: app
             # Echo lee VITE_REVERB_* en build time: tienen que coincidir con los
             # puertos expuestos por compose (nginx 8088, reverb 8089).
             args:
@@ -18,16 +19,25 @@ services:
         volumes:
             - db-data:/var/www/html/database
             - storage-data:/var/www/html/storage
+        # /tmp/ready lo crea el entrypoint al terminar migrate/seed: nginx y
+        # reverb no arrancan hasta que la app puede responder.
+        healthcheck:
+            test: ['CMD', 'test', '-f', '/tmp/ready']
+            interval: 3s
+            timeout: 3s
+            retries: 60
 
     nginx:
-        image: nginx:alpine
+        build:
+            context: .
+            target: web
+        image: lions-dashboard-web
         restart: unless-stopped
         ports:
             - '8088:80'
-        volumes:
-            - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
         depends_on:
-            - app
+            app:
+                condition: service_healthy
 
     reverb:
         image: lions-dashboard
@@ -42,7 +52,8 @@ services:
         ports:
             - '8089:8080'
         depends_on:
-            - app
+            app:
+                condition: service_healthy
 
 volumes:
     db-data:

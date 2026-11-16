@@ -1,7 +1,7 @@
-# Imagen del app (php-fpm 8.4) + build de assets Vite en el mismo stage:
-# el plugin wayfinder corre `php artisan wayfinder:generate` durante el
+# Stage app: imagen del app (php-fpm 8.4) + build de assets Vite en el mismo
+# stage: el plugin wayfinder corre `php artisan wayfinder:generate` durante el
 # build de Vite y necesita PHP y vendor disponibles.
-FROM php:8.4-fpm-alpine
+FROM php:8.4-fpm-alpine AS app
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 RUN install-php-extensions pdo_sqlite bcmath intl pcntl posix opcache
@@ -51,3 +51,10 @@ ENV APP_ENV=production \
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]
+
+# Stage web: nginx con los assets compilados embebidos (public/build).
+# El app no expone public/ por volumen, así que nginx lo lleva en la imagen.
+FROM nginx:alpine AS web
+
+COPY --from=app /var/www/html/public /var/www/html/public
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
