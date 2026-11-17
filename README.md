@@ -70,8 +70,14 @@ Requisitos: Docker Desktop (engine + compose). No hace falta PHP ni Node en el h
 
 ```bash
 cp .env.docker.example .env.docker   # (Windows: Copy-Item)
+docker compose pull                  # descarga las imágenes prearmadas (~2 min la primera vez)
 docker compose up -d
 ```
+
+Las imágenes están publicadas en **ghcr.io** para Intel y ARM (Mac M-series):
+
+- `ghcr.io/nahuel-cpu/lions_dashboard/app:latest` (php-fpm)
+- `ghcr.io/nahuel-cpu/lions_dashboard/web:latest` (nginx + assets)
 
 - App: **http://localhost:8088** — Reverb (WebSocket): **ws://localhost:8089**
 - Login demo: **admin@lions.com / lions1234**
@@ -82,13 +88,23 @@ docker compose up -d
 - Para conectar tu tienda Shopify real, agregá `SHOPIFY_STORE_DOMAIN`,
   `SHOPIFY_CLIENT_ID` y `SHOPIFY_CLIENT_SECRET` al `.env.docker`.
 
+**Alternativa: construir localmente** (~15 min, necesita descargar PHP, Node y
+dependencias). Es obligatoria si cambiás los puertos 8088/8089, porque los
+assets de las imágenes prearmadas dejan los valores por defecto horneados:
+
+```bash
+cp .env.docker.example .env.docker   # (Windows: Copy-Item)
+docker compose build
+docker compose up -d
+```
+
 Qué hace cada contenedor:
 
-| Servicio | Imagen                                                             | Puerto host | Función                                          |
-| -------- | ------------------------------------------------------------------ | ----------- | ------------------------------------------------ |
-| `app`    | php:8.4-fpm-alpine (build propio con Node para los assets de Vite) | —           | php-fpm; corre migraciones y seed en el arranque |
-| `nginx`  | nginx:alpine                                                       | **8088**    | front controller (root `public/`)                |
-| `reverb` | misma imagen del app                                               | **8089**    | servidor WebSocket                               |
+| Servicio | Imagen                                   | Puerto host | Función                                          |
+| -------- | ---------------------------------------- | ----------- | ------------------------------------------------ |
+| `app`    | ghcr.io/nahuel-cpu/lions_dashboard/app   | —           | php-fpm; corre migraciones y seed en el arranque |
+| `nginx`  | ghcr.io/nahuel-cpu/lions_dashboard/web   | **8088**    | front controller (root `public/`)                |
+| `reverb` | ghcr.io/nahuel-cpu/lions_dashboard/app   | **8089**    | servidor WebSocket                               |
 
 ## Puesta en marcha sin Docker (desarrollo)
 

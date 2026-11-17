@@ -11,7 +11,7 @@ services:
                 VITE_REVERB_HOST: localhost
                 VITE_REVERB_PORT: '8089'
                 VITE_REVERB_SCHEME: http
-        image: lions-dashboard
+        image: ghcr.io/nahuel-cpu/lions_dashboard/app:latest
         restart: unless-stopped
         env_file: .env.docker
         environment:
@@ -31,7 +31,7 @@ services:
         build:
             context: .
             target: web
-        image: lions-dashboard-web
+        image: ghcr.io/nahuel-cpu/lions_dashboard/web:latest
         restart: unless-stopped
         ports:
             - '8088:80'
@@ -40,7 +40,7 @@ services:
                 condition: service_healthy
 
     reverb:
-        image: lions-dashboard
+        image: ghcr.io/nahuel-cpu/lions_dashboard/app:latest
         restart: unless-stopped
         command:
             ['php', 'artisan', 'reverb:start', '--host=0.0.0.0', '--port=8080']

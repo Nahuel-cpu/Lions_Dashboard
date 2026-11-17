@@ -1,0 +1,61 @@
+name: docker
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup QEMU (build arm64 emulado)
+        uses: docker/setup-qemu-action@5138f26214adf9d69718655df70f66d2b3c81db3 # v4.4.0
+
+      - name: Setup Buildx
+        uses: docker/setup-buildx-action@bf8388060db527dff14f48b6a5fdbe70763c1213 # v4.4.1
+
+      - name: Login a ghcr.io
+        uses: docker/login-action@d0b8297dd55199249f38268efae35fcb03f75aab # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build y push imagen app (php-fpm)
+        uses: docker/build-push-action@562e51947939164e4fe808a6eab5101977e509e0 # v7.4.0
+        with:
+          context: .
+          target: app
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/nahuel-cpu/lions_dashboard/app:latest
+            ghcr.io/nahuel-cpu/lions_dashboard/app:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build y push imagen web (nginx + assets)
+        uses: docker/build-push-action@562e51947939164e4fe808a6eab5101977e509e0 # v7.4.0
+        with:
+          context: .
+          target: web
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/nahuel-cpu/lions_dashboard/web:latest
+            ghcr.io/nahuel-cpu/lions_dashboard/web:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
