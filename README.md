@@ -100,11 +100,11 @@ docker compose up -d
 
 Qué hace cada contenedor:
 
-| Servicio | Imagen                                   | Puerto host | Función                                          |
-| -------- | ---------------------------------------- | ----------- | ------------------------------------------------ |
-| `app`    | ghcr.io/nahuel-cpu/lions_dashboard/app   | —           | php-fpm; corre migraciones y seed en el arranque |
-| `nginx`  | ghcr.io/nahuel-cpu/lions_dashboard/web   | **8088**    | front controller (root `public/`)                |
-| `reverb` | ghcr.io/nahuel-cpu/lions_dashboard/app   | **8089**    | servidor WebSocket                               |
+| Servicio | Imagen                                 | Puerto host | Función                                          |
+| -------- | -------------------------------------- | ----------- | ------------------------------------------------ |
+| `app`    | ghcr.io/nahuel-cpu/lions_dashboard/app | —           | php-fpm; corre migraciones y seed en el arranque |
+| `nginx`  | ghcr.io/nahuel-cpu/lions_dashboard/web | **8088**    | front controller (root `public/`)                |
+| `reverb` | ghcr.io/nahuel-cpu/lions_dashboard/app | **8089**    | servidor WebSocket                               |
 
 ## Puesta en marcha sin Docker (desarrollo)
 
