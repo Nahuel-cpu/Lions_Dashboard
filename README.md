@@ -68,9 +68,25 @@ Leaflet/OpenStreetMap y Laravel Reverb (WebSockets reales). Incluye integración
 
 Requisitos: Docker Desktop (engine + compose). No hace falta PHP ni Node en el host.
 
+### 1. Descargar y descomprimir el proyecto
+
+1. Entrá a <https://github.com/Nahuel-cpu/Lions_Dashboard>
+2. Botón verde **`< > Code`** → **Download ZIP**
+3. Descomprimí el ZIP en una **carpeta nueva**, por ejemplo `C:\proyectos\Lions_Dashboard`
+4. Abrí una terminal **dentro de esa carpeta** (en Windows: abrí el Símbolo del
+   sistema o PowerShell y hacé `cd` a la carpeta)
+
+Si preferís Git en vez del ZIP: `git clone https://github.com/Nahuel-cpu/Lions_Dashboard.git`
+
+> Importante: si ya tenías una instalación anterior en esa misma carpeta, primero
+> hacé el reset de la sección [Solución de problemas](#solución-de-problemas).
+
+### 2. Levantar el stack
+
 ```bash
-cp .env.docker.example .env.docker   # (Windows: Copy-Item)
-docker compose pull                  # descarga las imágenes prearmadas (~2 min la primera vez)
+copy .env.docker.example .env.docker   # Windows (cmd y PowerShell)
+cp .env.docker.example .env.docker     # Linux/Mac
+docker compose pull                    # descarga las imágenes prearmadas (~2 min la primera vez)
 docker compose up -d
 ```
 
@@ -93,7 +109,8 @@ dependencias). Es obligatoria si cambiás los puertos 8088/8089, porque los
 assets de las imágenes prearmadas dejan los valores por defecto horneados:
 
 ```bash
-cp .env.docker.example .env.docker   # (Windows: Copy-Item)
+copy .env.docker.example .env.docker   # Windows (cmd y PowerShell)
+cp .env.docker.example .env.docker     # Linux/Mac
 docker compose build
 docker compose up -d
 ```
@@ -105,6 +122,17 @@ Qué hace cada contenedor:
 | `app`    | ghcr.io/nahuel-cpu/lions_dashboard/app | —           | php-fpm; corre migraciones y seed en el arranque |
 | `nginx`  | ghcr.io/nahuel-cpu/lions_dashboard/web | **8088**    | front controller (root `public/`)                |
 | `reverb` | ghcr.io/nahuel-cpu/lions_dashboard/app | **8089**    | servidor WebSocket                               |
+
+## Solución de problemas
+
+| Problema                                                        | Causa                                                                      | Solución                                                                                     |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| HTTP 500 en todas las páginas después de actualizar el proyecto | Volúmenes con estado viejo de una instalación anterior en la misma carpeta | `docker compose down -v` y después `docker compose up -d` (borra datos y re-siembra el demo) |
+| `env file .env.docker not found`                                | Falta crear el `.env.docker` antes de `docker compose up`                  | `copy .env.docker.example .env.docker` (Windows) o `cp .env.docker.example .env.docker`      |
+| `pull access denied for lions-dashboard`                        | El ZIP/compose es anterior a las imágenes en ghcr.io                       | Descargá el ZIP actualizado y volvé a ejecutar `docker compose pull` + `up -d`               |
+| `cp` / `copy` no se reconoce como comando                       | Comando de Linux usado en cmd (o viceversa)                                | En Windows: `copy`; en Linux/Mac y PowerShell: `cp`                                          |
+| No aparece el feed en vivo                                      | Reverb no arrancó                                                          | `docker compose ps` (reverb debe estar Up) y revisá `docker compose logs reverb`             |
+| Quiero resetear todo el demo                                    | —                                                                          | `docker compose down -v` + `docker compose up -d`                                            |
 
 ## Puesta en marcha sin Docker (desarrollo)
 
